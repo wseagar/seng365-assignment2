@@ -5,7 +5,7 @@
         <h1 class="jumbotron-heading">Bring new ideas to life, anywhere.</h1>
         <p class="lead text-muted">Explore creative projects and bring bold new ideas into the world.</p>
         <p>
-          <router-link to="createproject" class="btn btn-primary">Create a Project</router-link>
+          <router-link to="project/new" class="btn btn-primary">Create a Project</router-link>
         </p>
       </div>
     </section>

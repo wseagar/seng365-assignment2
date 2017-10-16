@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = "http://localhost:4941/api/v2";
+const baseURL = "http://localhost:4941/api/v2"
+
+axios.defaults.baseURL = baseURL;
 
 
 const Auth = {
@@ -57,13 +59,15 @@ const Auth = {
         error: errorMsg
       };
     }),
-    logout: () =>
-      axios.post('/users/logout')
+    logout: () => {
+      localStorage.removeItem('user');
+      return axios.post('/users/logout')
         .then( (res) => {
-          localStorage.removeItem('user');
           return res.data
         })
         .catch( (err) => err.response )
+    }
+      
 };
 
 const Project = {
@@ -76,9 +80,60 @@ const Project = {
       }
     }).then( (res) => res.data)
       .catch( (err) => err.response)
+      ,
+  create: (projectData) => {
+    let user = JSON.parse(localStorage.getItem('user'));
+
+    projectData.rewards.forEach(function (reward) {
+      reward.amount = parseInt(reward.amount);
+    });
+
+    return axios.post('/projects', {
+      title: projectData.title,
+      subtitle: projectData.subtitle,
+      description: projectData.description,
+      target: parseInt(projectData.target),
+      creators: [ {id: user.id}],
+      rewards: projectData.rewards
+    }).then((res) => res.data)
+      .catch((err) => {
+        let errorMsg; 
+        switch (err.response.status) {
+          case 400:
+            errorMsg = "Malformed project data";
+            break;
+          case 401:
+            errorMsg = "Unauthorized - create account to create project";
+            break;
+          default:
+            errorMsg = "Server error";
+        }
+        return { error: errorMsg }
+      })
+  },
+  putImage: (projectId, image) => {
+    return axios.put(`/projects/${projectId}/image`, 
+      image,
+      {
+        headers: {
+          'Content-Type': 'image/png'
+        }
+      })
+      .then (res => console.log(res))
+      .catch (err => console.log(err))
+  },
+  getProjectById: (projectId) => {
+    return axios.get(`/projects/${projectId}`)
+      .then((res) => res.data)
+  },
+  createPledge: (projectId, pledge) => {
+    return axios.post(`/projects/${projectId}/pledge`, pledge)
+      .then( res => res.data)
+  }
 }
 
 export default {
   Auth,
-  Project
+  Project,
+  baseURL
 };

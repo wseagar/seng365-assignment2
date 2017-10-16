@@ -41,7 +41,10 @@ export default {
   methods: {
     logout: function() {
       api.Auth.logout()
-        .then( () => this.$router.push({ path: '#'}));
+        .then( () => {
+          this.$router.push({ path: '/'});
+          this.loggedIn = api.Auth.isAuthenticated();
+        });
     }
   },
   watch: {
