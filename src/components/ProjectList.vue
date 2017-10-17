@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <h3>Featured projects</h3>
-      <a class="ml-auto">View all projects</a>
+      <router-link to="/project" class="ml-auto">View all projects</router-link>
     </div>
     <div class="row">
       <div class="col-sm-4 my-2" v-for="project in projects">
@@ -37,7 +37,12 @@ export default {
   },
 
   mounted: function() {
-    api.Project.getProjects(0, 6)
+    const params = {
+      count: 6,
+      open: true,
+    }
+
+    api.Project.getProjects(params)
       .then( (response) => {
         this.projects = response;
         this.projects.forEach( (project) => {

@@ -71,13 +71,9 @@ const Auth = {
 };
 
 const Project = {
-  getProjects: (startIndex, count) =>
+  getProjects: (params) =>
     axios.get('/projects', {
-      params: {
-        startIndex: startIndex,
-        count: count,
-        open: true,
-      }
+      params
     }).then( (res) => res.data)
       .catch( (err) => err.response)
       ,
@@ -129,6 +125,20 @@ const Project = {
   createPledge: (projectId, pledge) => {
     return axios.post(`/projects/${projectId}/pledge`, pledge)
       .then( res => res.data)
+  },
+  closeProject: (projectId) => {
+    return axios.put(`/projects/${projectId}`, 
+      {
+        open: false
+      }).then( res => res.data)
+  },
+  updateRewards: (projectId, rewards) => {
+    rewards.forEach(function (reward) {
+      reward.amount = parseInt(reward.amount);
+    });
+
+    return axios.put(`/projects/${projectId}/rewards`, rewards)
+      .then( res => res.data);
   }
 }
 

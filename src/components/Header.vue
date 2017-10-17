@@ -4,8 +4,13 @@
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          <router-link to="/home" class="nav-link">Home <span class="sr-only">(current)</span></router-link>
+          
         </li>
+        <li class="nav-item">
+          <router-link to="/project" class="nav-link">Projects <span class="sr-only">(current)</span></router-link>
+        </li>
+        
       </ul>
       <template v-if="!loggedIn">
         <ul class="navbar-nav">

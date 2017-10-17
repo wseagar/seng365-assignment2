@@ -28,6 +28,7 @@
         </div>
         
     </div> 
+    
     <div class="row">
       <div class="col-md-4">
         <img class="img-fluid" :src="project.image" onerror="javascript:this.src='https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'">
@@ -35,7 +36,9 @@
           <div class="card-body" >
             <h4 class="card-title">Created By</h4>
             <p class="card-text" v-for="(item, index) in project.creators">{{ item.username }}</p>
-            
+            <p v-if="owner">
+              <router-link :to="`/project/${project.id}/modify`" class="card-link">Modify your project</router-link>
+            </p>
           </div>
         </div>
         <div class="card my-2">
@@ -81,16 +84,25 @@ export default {
     return {
       project : null,
       backers: null,
-      error : null
+      error : null,
+      user : null,
+      owner: null
     }    
   },
   mounted: function() {
     let id = this.$route.params.id;
+
+    const authed = api.Auth.isAuthenticated();
+    if (authed) {
+      this.user = JSON.parse(authed);
+    }
+
     api.Project.getProjectById(id)
       .then((res) => {
         res.image = api.baseURL + res.imageUri;
         this.project = res;
         this.setBackers();
+        this.isOwner();
       })
       .catch((err) => this.error = "Not Found")
   },
@@ -116,12 +128,24 @@ export default {
           id : 0,
           username : "anonymous",
           amount: anonAmount
-        }
-
+        }  
         recent.push(anon);
-        this.backers = recent;
+      }
+      
+      this.backers = recent;
+    },
+    isOwner: function() {
+      const creators = this.project.creators;
+
+      for (let i = 0; i < creators.length; i++) {
+        if (creators[i].id === this.user.id) {
+          this.owner = true;
+          return;
+        }
       }
 
+      this.owner = false;
+      return;
     }
   },
   computed: {
@@ -129,9 +153,6 @@ export default {
       let percent = (this.project.progress.currentPledged / this.project.target) * 100;
       percent = Math.round(percent);
       return percent.toString() + "%";
-    },
-    recentBackers: function () {
-      
     }
   }
 
