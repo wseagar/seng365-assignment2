@@ -15,12 +15,12 @@ const Auth = {
     }
   },
   //Create new user
-  create: (user, email, pass) =>
+  create: (user, email, pass, location) =>
     axios.post('/users', {
       username: user,
       email: email,
       password: pass,
-      location: "New Zealand"
+      location: location ? location : "New Zealand"
     }).then((response) => response.data
      ).catch(function (err) {
       let errorMsg; 

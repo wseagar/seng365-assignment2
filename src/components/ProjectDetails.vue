@@ -58,8 +58,8 @@
             <h4 class="card-title"> Description </h4>
             <p class="card-text">
               {{ project.description }}
-              {{ recentBackers }}
             </p>
+            <router-link :to="`/project/${project.id}/pledge`" class="btn btn-primary">Pledge Now!</router-link>
           </div>
         </div>
         <div class="card my-2" v-for="(item, index) in project.rewards">

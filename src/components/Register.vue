@@ -24,6 +24,10 @@
                 <input type="password" class="form-control form-control-lg" v-model="password" placeholder="Password">
                 </input>
               </fieldset>
+              <fieldset class="form-group">
+                <input type="text" class="form-control form-control-lg" v-model="location" placeholder="Location (optional)">
+                </input>
+              </fieldset>
               <button class="btn btn-lg btn-primary pull-xs-right" type="submit">Sign up</button>
             </fieldset>
           </form>
@@ -42,13 +46,14 @@ export default {
       username : "",
       password : "",
       email: "",
+      location: null,
       error: null
     }
     
   },
   methods: {
     register: function() {
-      api.Auth.create(this.username, this.email, this.password)
+      api.Auth.create(this.username, this.email, this.password, this.location)
         .then((response) => {
           if (response.error) {
             this.error = response.error;

@@ -4,7 +4,7 @@
       <h1>Projects</h1>
     </div>
     <div class="btn-toolbar mb-3" role="toolbar">
-      <div class="btn-group" role="group">
+      <div class="btn-group" role="group" v-if="userId != null">
         <button v-on:click="allOnClick()" type="button" class="btn btn-secondary">All</button>
         <button type="button" class="btn btn-secondary" v-on:click="creatorOnClick()">Created</button>
         <button type="button" class="btn btn-secondary" v-on:click="backerOnClick()">Backing</button>
